@@ -1,34 +1,49 @@
-# mc-server-plugins
+# Streaky SMP Plugins
 
-Minecraft server plugins, one directory each. Every plugin here is
-self-contained: its own build, its own documentation, its own tests.
+Minecraft Paper server plugins for the Streaky SMP network. Each plugin lives
+in its own repository with its own build, documentation and tests.
 
-| Plugin | What it does | Platform | Status |
+## Plugins
+
+| Plugin | Repository | Description | Status |
 |---|---|---|---|
-| [ServerCore](ServerCore/) | Economy, server shop, auction house, land claims, player shops, spawn plots with rent, teleports, statistics and leaderboards — built as one system rather than a pile of unrelated commands | Paper 26.2 · Java 25 | 250 tests passing |
+| **ServerCore** | [streaky-smp/ServerCore](https://github.com/streaky-smp/ServerCore) | Economy, server shop, auction house, land claims, player shops, spawn plots with rent, teleports, statistics and leaderboards | 250 tests passing |
 
-## Building
+## Adding a new plugin
 
-Each plugin builds independently from its own directory:
+1. Create a new repo under the `streaky-smp` org: `streaky-smp/<PluginName>`
+2. Use [ServerCore](https://github.com/streaky-smp/ServerCore) as a reference — it has the Maven build, `build.ps1` and release workflow already set up
+3. Each plugin should be self-contained: own `pom.xml`, own `build.ps1`, own `.github/workflows/release.yml`
+4. Add a row to the table above
+5. Target platform: Paper 26.2+ / Java 25
 
-```bash
-cd ServerCore && ./gradlew build
+## Build structure
+
+Every plugin follows the same layout:
+
+```
+PluginName/
+  pom.xml              # Maven build
+  build.ps1            # Local build script (sets JAVA_HOME, runs mvn)
+  src/
+    main/java/         # Plugin source
+    main/resources/    # plugin.yml, config.yml, etc.
+    test/java/         # JUnit 5 tests
+  .github/workflows/
+    release.yml        # Builds on tag push, creates GitHub Release
+  README.md            # Plugin-specific docs
 ```
 
-The jar lands in that plugin's `build/libs/`. Built jars are not committed —
-see the repository's Releases for downloadable builds.
+## Releasing
 
-## ServerCore at a glance
+Tag a version and push — CI builds the jar and creates a GitHub Release:
 
-- **Bedrock crossplay is a design constraint, not an afterthought.** Every
-  action is reachable by a plain left click on a labelled item, because a
-  touch device cannot reliably produce a right-click or a shift-click.
-- **Money is a `long` of minor units**, never a `double`, and every balance
-  change is a conditional `UPDATE` whose success is the affected row count —
-  so a double spend cannot commit even when two threads race.
-- **Nothing blocks the main thread.** Database access throws if attempted on
-  it; every query computes off-thread and delivers on it.
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
 
-[`ServerCore/docs/conformance-ledger.html`](ServerCore/docs/conformance-ledger.html)
-walks all 33 requirements of the original specification with the evidence
-behind each — and names the four that still need a human at a keyboard.
+This project follows [Semantic Versioning](https://semver.org/):
+- **MAJOR** — breaking changes
+- **MINOR** — new features, backward compatible
+- **PATCH** — bug fixes, drop-in replacement
