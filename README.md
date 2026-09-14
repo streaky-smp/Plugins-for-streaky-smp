@@ -11,14 +11,20 @@ in its own repository with its own build, documentation and tests.
 
 ## Workflows
 
-Shared workflow templates live in [`workflows/`](workflows/) in this repo.
-When creating a new plugin, copy both files into the new repo's
-`.github/workflows/` directory:
+Shared workflow templates live in [`template/.github/workflows/`](template/.github/workflows/)
+and are also mirrored in [`workflows/`](workflows/) for quick copies.
+When creating a new plugin, copy the entire [`template/`](template/) directory into the new repo:
+
+```bash
+# Set up a new plugin from the template:
+cp -r template/ <PluginName>/
+# Then rename PluginName references in pom.xml, plugin.yml, etc.
+```
 
 | Workflow | File | Trigger | What it does |
 |---|---|---|---|
-| Build & Test | [`build.yml`](workflows/build.yml) | Push to `main`, PRs | Builds the plugin, runs all tests. Fails the build if any test fails. |
-| Release | [`release.yml`](workflows/release.yml) | Tag push (`v*`) | Builds, runs tests, creates a GitHub Release with the jar attached. |
+| Build & Test | [`build.yml`](template/.github/workflows/build.yml) | Push to `main`, PRs | Builds the plugin, runs all tests. Fails the build if any test fails. |
+| Release | [`release.yml`](template/.github/workflows/release.yml) | Tag push (`v*`) | Builds, runs tests, creates a GitHub Release with the jar attached. |
 
 ```bash
 # Set up a new plugin with both workflows:
@@ -30,11 +36,12 @@ cp workflows/release.yml <PluginName>/.github/workflows/
 ## Adding a new plugin
 
 1. Create a new repo under the `streaky-smp` org: `streaky-smp/<PluginName>`
-2. Copy the workflow files from `workflows/` into `.github/workflows/` in the new repo
-3. Use [ServerCore](https://github.com/streaky-smp/ServerCore) as a reference — it has the Maven build, `build.ps1` and full project structure
-4. Each plugin should be self-contained: own `pom.xml`, own `build.ps1`, own docs
-5. Add a row to the plugins table above (include the build badge)
-6. Target platform: Paper 26.2+ / Java 25
+2. Copy the entire [`template/`](template/) directory into the new repo and rename it
+3. Update the `pom.xml`, `plugin.yml` and class names to match your plugin
+4. Use [ServerCore](https://github.com/streaky-smp/ServerCore) as a full reference implementation
+5. Each plugin should be self-contained: own `pom.xml`, own `build.ps1`, own docs
+6. Add a row to the plugins table above (include the build badge)
+7. Target platform: Paper 26.2+ / Java 25
 
 ## Build structure
 

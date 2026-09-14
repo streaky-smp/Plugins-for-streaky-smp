@@ -1,0 +1,15 @@
+name: PluginName
+version: '${version}'
+main: com.pluginname.PluginNamePlugin
+api-version: '${apiVersion}'
+description: A Paper plugin for the Streaky SMP network.
+authors: [YourName]
+
+# All integrations are OPTIONAL. The plugin loads and runs fully without them.
+softdepend: []
+
+# Commands are registered through Paper's Brigadier lifecycle (see
+# PluginNamePlugin#registerCommands), not declared here, so they get real
+# argument parsing and tab-completion.
+
+permissions: {}
